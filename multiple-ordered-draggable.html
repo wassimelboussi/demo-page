@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draggable Cards with Severity Levels</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .card {
+      width: 200px;
+      margin-bottom: 20px;
+      cursor: grab;
+      position: relative;
+    }
+    .severe {
+      background-color: red;
+    }
+    .serious {
+      background-color: orange;
+    }
+    .normal {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Draggable Cards with Severity Levels</h2>
+  <div class="row">
+    <div class="col-md-4">
+      <div id="card1" class="card severe">
+        <div class="card-body">
+          <h5 class="card-title">Severe Card 1</h5>
+          <p class="card-text">This is a severe emergency.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="card2" class="card serious">
+        <div class="card-body">
+          <h5 class="card-title">Serious Card 1</h5>
+          <p class="card-text">This is a serious emergency.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="card3" class="card normal">
+        <div class="card-body">
+          <h5 class="card-title">Normal Card 1</h5>
+          <p class="card-text">This is a normal emergency.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="card4" class="card severe">
+        <div class="card-body">
+          <h5 class="card-title">Severe Card 2</h5>
+          <p class="card-text">This is another severe emergency.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="card5" class="card serious">
+        <div class="card-body">
+          <h5 class="card-title">Serious Card 2</h5>
+          <p class="card-text">This is another serious emergency.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div id="card6" class="card normal">
+        <div class="card-body">
+          <h5 class="card-title">Normal Card 2</h5>
+          <p class="card-text">This is another normal emergency.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="orderButton" class="btn btn-primary">Order Cards</button>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  // Make cards draggable
+  $(document).ready(function() {
+    var zIndexCounter = 1; // Initialize the zIndex counter
+
+    $('.card').on('mousedown', function(e) {
+      var $dragging = $(this);
+      $dragging.css('z-index', zIndexCounter++); // Bring the clicked card to the top
+
+      var startX = e.clientX;
+      var startY = e.clientY;
+      var offsetX = parseFloat($dragging.css('left'));
+      var offsetY = parseFloat($dragging.css('top'));
+
+      $(document).on('mousemove', function(e) {
+        var deltaX = e.clientX - startX;
+        var deltaY = e.clientY - startY;
+        $dragging.css({
+          'left': offsetX + deltaX + 'px',
+          'top': offsetY + deltaY + 'px'
+        });
+      });
+
+      $(document).on('mouseup', function() {
+        $(document).off('mousemove');
+        $(document).off('mouseup');
+      });
+    });
+
+    // Order cards function
+    $('#orderButton').click(function() {
+      $('.card').each(function(index) {
+        var initialPosition = $(this).data('initialPosition');
+        $(this).css({
+          'left': initialPosition.left,
+          'top': initialPosition.top,
+          'z-index': ''
+        });
+      });
+      zIndexCounter = 1; // Reset zIndexCounter after ordering
+    });
+
+    // Save initial positions
+    $('.card').each(function(index) {
+      var position = $(this).position();
+      $(this).data('initialPosition', {left: position.left, top: position.top});
+    });
+  });
+</script>
+
+</body>
+</html>
