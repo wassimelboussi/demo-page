@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Draggable Cards</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .card {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Draggable Cards</h2>
+  <div id="card-container" class="card-container">
+    <div id="card1" class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title">Card 1</h5>
+        <p class="card-text">Content of card 1</p>
+      </div>
+    </div>
+    <div id="card2" class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title">Card 2</h5>
+        <p class="card-text">Content of card 2</p>
+      </div>
+    </div>
+    <div id="card3" class="card bg-light">
+      <div class="card-body">
+        <h5 class="card-title">Card 3</h5>
+        <p class="card-text">Content of card 3</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  // Make cards draggable
+  $(document).ready(function() {
+    $('.card').on('mousedown', function(e) {
+      var $dragging = null;
+      var startX, startY, offsetX, offsetY;
+
+      $(this).css('cursor', 'grabbing');
+      startX = e.clientX;
+      startY = e.clientY;
+      offsetX = parseFloat($(this).css('left'));
+      offsetY = parseFloat($(this).css('top'));
+
+      $dragging = $(this);
+
+      $(document).on('mousemove', function(e) {
+        if ($dragging) {
+          var deltaX = e.clientX - startX;
+          var deltaY = e.clientY - startY;
+          $dragging.css({
+            'left': offsetX + deltaX + 'px',
+            'top': offsetY + deltaY + 'px'
+          });
+        }
+      });
+
+      $(document).on('mouseup', function() {
+        $dragging.css('cursor', 'grab');
+        $dragging = null;
+        $(document).off('mousemove');
+        $(document).off('mouseup');
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
